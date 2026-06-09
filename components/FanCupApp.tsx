@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { uintCV } from "@stacks/transactions";
+import { uintCV, cvToHex } from "@stacks/transactions";
 import {
   APP_DETAILS,
   CONTRACT_ADDRESS,
@@ -38,17 +38,19 @@ export default function FanCupApp() {
 
   async function connectWallet() {
     try {
-      const { showConnect } = await import("@stacks/connect");
+      const stacksConnect = await import("@stacks/connect");
 
-      showConnect({
+      const connectFn = (stacksConnect as any).connect;
+
+      if (!connectFn) {
+        throw new Error("connect() not found in @stacks/connect");
+      }
+
+      await connectFn({
         appDetails: APP_DETAILS,
-        onFinish: () => {
-          setStatus({ label: "Wallet connected" });
-        },
-        onCancel: () => {
-          setStatus({ label: "Wallet connection cancelled" });
-        },
       });
+
+      setStatus({ label: "Wallet connected" });
     } catch (err) {
       setStatus({
         label: "Wallet error",
@@ -61,33 +63,31 @@ export default function FanCupApp() {
     try {
       assertContractAddress();
 
-      const { openContractCall } = await import("@stacks/connect");
+      const stacksConnect = await import("@stacks/connect");
+      const request = (stacksConnect as any).request;
+
+      if (!request) {
+        throw new Error("request() not found in @stacks/connect");
+      }
 
       setStatus({
         label: `Waiting wallet confirmation: ${functionName}`,
       });
 
-      await openContractCall({
-        contractAddress: CONTRACT_ADDRESS,
-        contractName: CORE_CONTRACT,
+      const result = await request("stx_callContract", {
+        contract: `${CONTRACT_ADDRESS}.${CORE_CONTRACT}`,
         functionName,
-        functionArgs,
-        appDetails: APP_DETAILS,
-        onFinish: (data: any) => {
-          setStatus({
-            label: `${functionName} submitted`,
-            txId: data.txId,
-          });
-        },
-        onCancel: () => {
-          setStatus({
-            label: `${functionName} cancelled`,
-          });
-        },
+        functionArgs: functionArgs.map((arg) => cvToHex(arg)),
+        network: "mainnet",
+      });
+
+      setStatus({
+        label: `${functionName} submitted`,
+        txId: result?.txid || result?.txId || result?.transaction_id,
       });
     } catch (err) {
       setStatus({
-        label: "Error",
+        label: "TX error",
         error: err instanceof Error ? err.message : String(err),
       });
     }
