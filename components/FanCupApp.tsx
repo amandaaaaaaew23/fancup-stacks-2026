@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { openContractCall, showConnect } from "@stacks/connect";
 import { uintCV } from "@stacks/transactions";
 import {
   APP_DETAILS,
@@ -37,21 +36,32 @@ export default function FanCupApp() {
   const [scoreB, setScoreB] = useState(1);
   const [boostAmount, setBoostAmount] = useState(1);
 
-  function connectWallet() {
-    showConnect({
-      appDetails: APP_DETAILS,
-      onFinish: () => {
-        setStatus({ label: "Wallet connected" });
-      },
-      onCancel: () => {
-        setStatus({ label: "Wallet connection cancelled" });
-      },
-    });
+  async function connectWallet() {
+    try {
+      const { showConnect } = await import("@stacks/connect");
+
+      showConnect({
+        appDetails: APP_DETAILS,
+        onFinish: () => {
+          setStatus({ label: "Wallet connected" });
+        },
+        onCancel: () => {
+          setStatus({ label: "Wallet connection cancelled" });
+        },
+      });
+    } catch (err) {
+      setStatus({
+        label: "Wallet error",
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 
   async function callCore(functionName: string, functionArgs: any[] = []) {
     try {
       assertContractAddress();
+
+      const { openContractCall } = await import("@stacks/connect");
 
       setStatus({
         label: `Waiting wallet confirmation: ${functionName}`,
@@ -63,7 +73,7 @@ export default function FanCupApp() {
         functionName,
         functionArgs,
         appDetails: APP_DETAILS,
-        onFinish: (data) => {
+        onFinish: (data: any) => {
           setStatus({
             label: `${functionName} submitted`,
             txId: data.txId,
