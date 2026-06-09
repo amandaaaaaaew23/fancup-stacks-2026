@@ -1,8 +1,10 @@
 ;; FanCup Stacks 2026 - Core Contract
-;; Onchain football prediction & fan voting arena on Stacks
+;; Onchain football prediction & fan voting arena built on Stacks.
+;; No gambling, no betting pool. This contract uses fan points, predictions, check-ins, and team boosts.
 
 (define-constant CONTRACT_OWNER tx-sender)
 
+;; ERRORS
 (define-constant ERR_UNAUTHORIZED (err u100))
 (define-constant ERR_ALREADY_JOINED (err u101))
 (define-constant ERR_NOT_JOINED (err u102))
@@ -21,12 +23,15 @@
 (define-constant ERR_INVALID_SCORE_B (err u115))
 (define-constant ERR_MATCH_NOT_CLOSED (err u116))
 (define-constant ERR_INVALID_AMOUNT (err u117))
+(define-constant ERR_INVALID_PRINCIPAL (err u118))
 
+;; STATE
 (define-data-var owner principal CONTRACT_OWNER)
 (define-data-var paused bool false)
 (define-data-var next-match-id uint u1)
 (define-data-var total-players uint u0)
 
+;; MAPS
 (define-map admins principal bool)
 
 (define-map players
@@ -75,6 +80,7 @@
 
 (define-map team-boosts uint uint)
 
+;; PRIVATE HELPERS
 (define-private (is-owner)
   (is-eq tx-sender (var-get owner))
 )
@@ -97,6 +103,10 @@
   (and (> team-id u0) (<= team-id u64))
 )
 
+;; pick rule:
+;; u0 = draw
+;; u1 = team-a win
+;; u2 = team-b win
 (define-private (get-result-pick (score-a uint) (score-b uint))
   (if (> score-a score-b)
     u1
@@ -107,6 +117,7 @@
   )
 )
 
+;; READ ONLY
 (define-read-only (get-player (user principal))
   (map-get? players user)
 )
@@ -147,9 +158,15 @@
   (var-get paused)
 )
 
+(define-read-only (is-admin-address (admin principal))
+  (default-to false (map-get? admins admin))
+)
+
+;; ADMIN FUNCTIONS
 (define-public (set-admin (admin principal) (enabled bool))
   (begin
     (asserts! (is-owner) ERR_UNAUTHORIZED)
+    (asserts! (is-standard admin) ERR_INVALID_PRINCIPAL)
     (map-set admins admin enabled)
     (ok true)
   )
@@ -166,11 +183,13 @@
 (define-public (transfer-ownership (new-owner principal))
   (begin
     (asserts! (is-owner) ERR_UNAUTHORIZED)
+    (asserts! (is-standard new-owner) ERR_INVALID_PRINCIPAL)
     (var-set owner new-owner)
     (ok true)
   )
 )
 
+;; USER FUNCTIONS
 (define-public (join-tournament)
   (let
     (
@@ -210,6 +229,7 @@
   )
 )
 
+;; ADMIN / KEEPER FRIENDLY
 (define-public (create-match (team-a uint) (team-b uint) (start-block uint) (close-block uint))
   (let
     (

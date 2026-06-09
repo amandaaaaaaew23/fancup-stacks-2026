@@ -5,14 +5,17 @@
 
 (define-constant CONTRACT_OWNER tx-sender)
 
+;; ERRORS
 (define-constant ERR_UNAUTHORIZED (err u200))
 (define-constant ERR_ALREADY_MINTED (err u201))
 (define-constant ERR_INVALID_BADGE (err u202))
 (define-constant ERR_INVALID_PRINCIPAL (err u203))
 
+;; STATE
 (define-data-var owner principal CONTRACT_OWNER)
 (define-data-var last-token-id uint u0)
 
+;; MAPS
 (define-map minters principal bool)
 
 (define-map user-badges
@@ -28,6 +31,7 @@
   }
 )
 
+;; PRIVATE HELPERS
 (define-private (is-owner)
   (is-eq tx-sender (var-get owner))
 )
@@ -36,24 +40,6 @@
   (or
     (is-owner)
     (default-to false (map-get? minters tx-sender))
-  )
-)
-
-(define-public (set-minter (minter principal) (enabled bool))
-  (begin
-    (asserts! (is-owner) ERR_UNAUTHORIZED)
-    (asserts! (is-standard minter) ERR_INVALID_PRINCIPAL)
-    (map-set minters minter enabled)
-    (ok true)
-  )
-)
-
-(define-public (transfer-ownership (new-owner principal))
-  (begin
-    (asserts! (is-owner) ERR_UNAUTHORIZED)
-    (asserts! (is-standard new-owner) ERR_INVALID_PRINCIPAL)
-    (var-set owner new-owner)
-    (ok true)
   )
 )
 
@@ -81,6 +67,27 @@
   )
 )
 
+;; ADMIN FUNCTIONS
+(define-public (set-minter (minter principal) (enabled bool))
+  (begin
+    (asserts! (is-owner) ERR_UNAUTHORIZED)
+    (asserts! (is-standard minter) ERR_INVALID_PRINCIPAL)
+    (map-set minters minter enabled)
+    (ok true)
+  )
+)
+
+(define-public (transfer-ownership (new-owner principal))
+  (begin
+    (asserts! (is-owner) ERR_UNAUTHORIZED)
+    (asserts! (is-standard new-owner) ERR_INVALID_PRINCIPAL)
+    (var-set owner new-owner)
+    (ok true)
+  )
+)
+
+;; MINT FUNCTIONS
+;; badge-type u1-u64 = supporter card based on team-id
 (define-public (mint-supporter-card (recipient principal) (team-id uint))
   (begin
     (asserts! (is-minter) ERR_UNAUTHORIZED)
@@ -90,6 +97,7 @@
   )
 )
 
+;; badge-type u1000 = streak badge
 (define-public (mint-streak-badge (recipient principal))
   (begin
     (asserts! (is-minter) ERR_UNAUTHORIZED)
@@ -97,6 +105,7 @@
   )
 )
 
+;; badge-type u2000 = prediction badge
 (define-public (mint-prediction-badge (recipient principal))
   (begin
     (asserts! (is-minter) ERR_UNAUTHORIZED)
@@ -104,6 +113,7 @@
   )
 )
 
+;; READ ONLY
 (define-read-only (get-contract-owner)
   (var-get owner)
 )
