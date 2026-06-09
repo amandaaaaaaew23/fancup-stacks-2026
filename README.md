@@ -1,36 +1,763 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FanCup Stacks 2026
 
-## Getting Started
+**FanCup Stacks 2026** is an onchain football prediction and fan voting arena built on **Stacks**, using **Clarity smart contracts**, **Clarinet**, **Stacks Connect**, and **Stacks.js**.
 
-First, run the development server:
+Fans can join a tournament, choose their favorite team, submit match predictions, check in daily, earn non-transferable fan points, boost teams, and build an onchain supporter reputation.
+
+This project is built for the **Stacks ecosystem** and designed as a real consumer-facing dApp that demonstrates recurring onchain interaction, smart contract activity, and Bitcoin L2 application development.
+
+---
+
+## Built for Stacks
+
+Stacks is a Bitcoin L2 for smart contracts, apps, and DeFi. The official Stacks documentation positions Stacks as a network for building Bitcoin-secured apps, with developer paths covering Clarity, Clarinet, Stacks.js, Stacks Connect, contract calls, and transaction broadcasting.
+
+FanCup Stacks 2026 uses:
+
+* **Stacks blockchain**
+* **Clarity smart contracts**
+* **Clarinet contract tooling**
+* **Stacks Connect wallet integration**
+* **Stacks.js transaction calls**
+* **STX-compatible contract interaction**
+* **Next.js frontend**
+* **TypeScript**
+* **TailwindCSS**
+
+---
+
+## Talent Protocol / Stacks Builder Rewards Alignment
+
+This repository is structured to be clearly recognized as a **Stacks ecosystem project**.
+
+The project includes:
+
+* Clarity contracts in `/contracts`
+* Clarinet configuration
+* Next.js frontend
+* Stacks wallet connection
+* Stacks contract call UI
+* README documentation
+* Stacks ecosystem keywords
+* Mainnet-ready contract architecture
+* User-facing dApp flow
+* Onchain activity design
+
+Talent Protocol's Stacks Builder Rewards flow requires builders to add a project, verify its website, and add a Stacks smart contract to the verified project. FanCup Stacks 2026 is structured around that flow.
+
+---
+
+## Project Summary
+
+**FanCup Stacks 2026** is not a betting app and does not use gambling mechanics.
+
+It is a fan prediction and reputation game where users interact with Clarity smart contracts to:
+
+* Join the FanCup tournament
+* Choose a supporter team
+* Predict match winners
+* Predict exact scores
+* Check in daily
+* Claim fan points
+* Boost teams using earned points
+* Mint supporter badges
+* Build onchain fan reputation
+
+All game points are non-transferable reputation points used inside the application.
+
+---
+
+## Core Idea
+
+Football fans already vote, predict, debate, and support teams every day.
+
+FanCup brings that behavior onchain through Stacks:
+
+> Join. Predict. Check in. Earn fan points. Boost your team. Build your supporter reputation on Bitcoin L2.
+
+The goal is to create a fun, repeatable, non-financial, consumer-friendly dApp that produces natural onchain activity.
+
+---
+
+## Why This Matters
+
+Most prediction games are either offchain, centralized, or tied to gambling mechanics.
+
+FanCup Stacks 2026 takes a different approach:
+
+* No betting pool
+* No odds
+* No wagering
+* No custody of user funds
+* No gambling reward loop
+* Reputation-first fan activity
+* Transparent onchain participation
+* Simple UX for new Stacks users
+
+This makes it safer, easier to understand, and more aligned with community participation.
+
+---
+
+## Onchain Activity Engine
+
+FanCup is designed around repeatable onchain actions.
+
+### User Actions
+
+| Action               | Contract Function    | Onchain TX |
+| -------------------- | -------------------- | ---------- |
+| Join tournament      | `join-tournament`    | Yes        |
+| Choose favorite team | `choose-team`        | Yes        |
+| Predict match winner | `predict-winner`     | Yes        |
+| Predict exact score  | `predict-score`      | Yes        |
+| Daily check-in       | `daily-checkin`      | Yes        |
+| Claim winner points  | `claim-points`       | Yes        |
+| Claim score points   | `claim-score-points` | Yes        |
+| Boost team           | `boost-team`         | Yes        |
+
+### Admin / Keeper Actions
+
+| Action             | Contract Function  | Onchain TX |
+| ------------------ | ------------------ | ---------- |
+| Create match       | `create-match`     | Yes        |
+| Set match result   | `set-match-result` | Yes        |
+| Pause contract     | `set-paused`       | Yes        |
+| Add operator/admin | `set-admin`        | Yes        |
+
+### Badge Actions
+
+| Action                | Contract Function       | Onchain TX |
+| --------------------- | ----------------------- | ---------- |
+| Mint supporter card   | `mint-supporter-card`   | Yes        |
+| Mint streak badge     | `mint-streak-badge`     | Yes        |
+| Mint prediction badge | `mint-prediction-badge` | Yes        |
+
+---
+
+## Smart Contracts
+
+The project currently includes two Clarity smart contracts:
+
+```txt
+contracts/
+├── fancup-core.clar
+└── fancup-badge.clar
+```
+
+---
+
+## Contract 1: `fancup-core.clar`
+
+The core contract handles the main prediction and fan activity logic.
+
+### Main Features
+
+* Tournament registration
+* Team selection
+* Match creation
+* Winner prediction
+* Score prediction
+* Daily check-in
+* Result finalization
+* Fan point claiming
+* Team boosting
+* Admin role management
+* Pause control
+* Ownership transfer
+
+### Core Public Functions
+
+```clarity
+(join-tournament)
+(choose-team (team-id uint))
+(create-match (team-a uint) (team-b uint) (start-block uint) (close-block uint))
+(predict-winner (match-id uint) (pick uint))
+(predict-score (match-id uint) (score-a uint) (score-b uint))
+(daily-checkin)
+(set-match-result (match-id uint) (score-a uint) (score-b uint))
+(claim-points (match-id uint))
+(claim-score-points (match-id uint))
+(boost-team (team-id uint) (amount uint))
+(set-admin (admin principal) (enabled bool))
+(set-paused (value bool))
+(transfer-ownership (new-owner principal))
+```
+
+### Read-Only Functions
+
+```clarity
+(get-player (user principal))
+(get-match (match-id uint))
+(get-team-boost (team-id uint))
+(has-predicted-winner (user principal) (match-id uint))
+(get-winner-prediction (user principal) (match-id uint))
+(get-score-prediction (user principal) (match-id uint))
+(get-owner)
+(get-total-players)
+(get-next-match-id)
+(is-paused)
+(is-admin-address (admin principal))
+```
+
+---
+
+## Contract 2: `fancup-badge.clar`
+
+The badge contract handles NFT-style supporter and achievement badges.
+
+### Badge Types
+
+| Badge Type   | Meaning                          |
+| ------------ | -------------------------------- |
+| `u1` - `u64` | Supporter cards based on team ID |
+| `u1000`      | Streak badge                     |
+| `u2000`      | Prediction badge                 |
+
+### Badge Functions
+
+```clarity
+(mint-supporter-card (recipient principal) (team-id uint))
+(mint-streak-badge (recipient principal))
+(mint-prediction-badge (recipient principal))
+(set-minter (minter principal) (enabled bool))
+(transfer-ownership (new-owner principal))
+```
+
+### Badge Read-Only Functions
+
+```clarity
+(get-contract-owner)
+(get-last-token-id)
+(get-owner (token-id uint))
+(get-badge-metadata (token-id uint))
+(has-badge (user principal) (badge-type uint))
+(is-approved-minter (minter principal))
+```
+
+---
+
+## Frontend
+
+The frontend is built with:
+
+* Next.js
+* TypeScript
+* TailwindCSS
+* Stacks Connect
+* Stacks transactions
+
+Current UI includes:
+
+* Connect Wallet
+* Contract address display
+* Join Tournament button
+* Choose Team form
+* Daily Check-in button
+* Predict Winner form
+* Predict Score form
+* Claim Winner Points button
+* Claim Score Points button
+* Boost Team form
+
+---
+
+## Repository Structure
+
+```txt
+fancup-stacks-2026/
+├── app/
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── ClientOnlyFanCup.tsx
+│   └── FanCupApp.tsx
+├── contracts/
+│   ├── fancup-core.clar
+│   └── fancup-badge.clar
+├── lib/
+│   └── stacks.ts
+├── settings/
+├── tests/
+├── Clarinet.toml
+├── package.json
+├── package-lock.json
+├── postcss.config.mjs
+├── next.config.ts
+├── tsconfig.json
+└── README.md
+```
+
+---
+
+## Tech Stack
+
+| Layer                   | Technology     |
+| ----------------------- | -------------- |
+| Blockchain              | Stacks         |
+| Smart Contract Language | Clarity        |
+| Contract Tooling        | Clarinet       |
+| Frontend                | Next.js        |
+| UI                      | TailwindCSS    |
+| Wallet                  | Stacks Connect |
+| Transactions            | Stacks.js      |
+| Language                | TypeScript     |
+| Deployment              | Vercel         |
+| Network Target          | Stacks Mainnet |
+
+---
+
+## Stacks Ecosystem Keywords
+
+This project is related to:
+
+```txt
+stacks
+stx
+clarity
+clarinet
+stacks-connect
+stacks-js
+bitcoin-l2
+bitcoin-layer-2
+smart-contracts
+onchain
+dapp
+web3
+fan-voting
+prediction-game
+onchain-game
+consumer-crypto
+```
+
+---
+
+## GitHub Topics Recommendation
+
+Recommended GitHub repository topics:
+
+```txt
+stacks
+clarity
+stx
+clarinet
+stacks-connect
+stacks-js
+bitcoin-l2
+bitcoin-layer-2
+smart-contracts
+dapp
+onchain-game
+prediction-game
+fan-voting
+nextjs
+typescript
+tailwindcss
+```
+
+---
+
+## Local Development
+
+### 1. Clone the Repository
+
+```bash
+git clone git@github.com:amandaaaaaaew23/fancup-stacks-2026.git
+cd fancup-stacks-2026
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Check Clarity Contracts
+
+```bash
+clarinet check
+```
+
+Expected result:
+
+```txt
+✔ 2 contracts checked
+```
+
+Warnings may appear from Clarinet analysis, but the contracts should compile successfully with zero fatal errors.
+
+### 4. Run Frontend
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```txt
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 5. Build Frontend
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create `.env.local`:
 
-## Deploy on Vercel
+```env
+NEXT_PUBLIC_CONTRACT_ADDRESS=SPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+NEXT_PUBLIC_CORE_CONTRACT=fancup-core
+NEXT_PUBLIC_BADGE_CONTRACT=fancup-badge
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Before mainnet deployment, a placeholder contract address can be used only for frontend build testing.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+After mainnet deployment, replace `NEXT_PUBLIC_CONTRACT_ADDRESS` with the actual Stacks deployer address.
+
+---
+
+## Mainnet Deployment Plan
+
+Target network:
+
+```txt
+Stacks Mainnet
+```
+
+Planned deployed contracts:
+
+```txt
+SPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.fancup-core
+SPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.fancup-badge
+```
+
+Deployment steps:
+
+```bash
+clarinet check
+clarinet deployments generate --mainnet
+clarinet deployments apply --mainnet
+```
+
+After deployment:
+
+1. Update `.env.local`
+2. Update Vercel environment variables
+3. Update README contract addresses
+4. Add deployed Stacks smart contracts to Talent Protocol project
+5. Verify website on Talent Protocol
+6. Continue shipping commits and onchain activity
+
+---
+
+## Mainnet Contract Addresses
+
+Current status:
+
+```txt
+Status: Not deployed yet
+Network: Stacks Mainnet planned
+```
+
+Update this section after deployment:
+
+```txt
+Core Contract:
+SPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.fancup-core
+
+Badge Contract:
+SPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.fancup-badge
+```
+
+---
+
+## User Flow
+
+### 1. Connect Wallet
+
+User connects a Stacks wallet using Stacks Connect.
+
+### 2. Join Tournament
+
+User calls:
+
+```clarity
+(join-tournament)
+```
+
+This creates an onchain FanCup profile.
+
+### 3. Choose Team
+
+User calls:
+
+```clarity
+(choose-team u1)
+```
+
+Example team IDs:
+
+| ID   | Team      |
+| ---- | --------- |
+| `u1` | Brazil    |
+| `u2` | Argentina |
+| `u3` | France    |
+| `u4` | England   |
+| `u5` | Japan     |
+| `u6` | Portugal  |
+| `u7` | Spain     |
+| `u8` | Germany   |
+
+### 4. Predict Match
+
+User predicts match winner:
+
+```clarity
+(predict-winner u1 u1)
+```
+
+Pick values:
+
+| Pick | Meaning     |
+| ---- | ----------- |
+| `u0` | Draw        |
+| `u1` | Team A wins |
+| `u2` | Team B wins |
+
+User predicts exact score:
+
+```clarity
+(predict-score u1 u2 u1)
+```
+
+### 5. Daily Check-in
+
+User calls:
+
+```clarity
+(daily-checkin)
+```
+
+This increases user streak and gives fan points.
+
+### 6. Claim Points
+
+After match result is set, user can claim points:
+
+```clarity
+(claim-points u1)
+(claim-score-points u1)
+```
+
+### 7. Boost Team
+
+User spends fan points to boost a team:
+
+```clarity
+(boost-team u1 u5)
+```
+
+---
+
+## Points System
+
+| Activity                  | Points |
+| ------------------------- | ------ |
+| Daily check-in            | `+1`   |
+| Correct winner prediction | `+10`  |
+| Exact score prediction    | `+30`  |
+
+Points are non-transferable and used only inside the FanCup reputation system.
+
+---
+
+## Security Notes
+
+The current MVP includes:
+
+* Owner control
+* Admin role management
+* Pause switch
+* One winner prediction per wallet per match
+* One score prediction per wallet per match
+* Match close block
+* Result finalization by admin
+* Score bounds
+* Team ID bounds
+* Non-transferable point accounting
+* No custody of user funds
+* No betting pool
+* No odds
+* No wagering mechanics
+
+---
+
+## Non-Gambling Design
+
+FanCup Stacks 2026 is designed as a fan reputation and prediction game.
+
+It does not include:
+
+* Betting
+* Gambling
+* Wagering
+* Odds
+* User-funded prize pools
+* Payouts based on deposited funds
+
+The core loop is:
+
+```txt
+Predict → Check in → Earn reputation points → Boost team → Build supporter profile
+```
+
+---
+
+## Roadmap
+
+### Phase 1 — MVP
+
+* Clarity core contract
+* Badge contract
+* Clarinet validation
+* Next.js frontend
+* Stacks Connect integration
+* Contract call UI
+* GitHub repository
+* Vercel deployment
+
+### Phase 2 — Mainnet Launch
+
+* Deploy `fancup-core.clar`
+* Deploy `fancup-badge.clar`
+* Add contract addresses to frontend
+* Add contracts to Talent Protocol project
+* Verify website
+* Create first demo matches
+* Enable user interactions
+
+### Phase 3 — Better UX
+
+* Match list page
+* Leaderboard page
+* User profile page
+* Team leaderboard
+* Transaction history
+* Badge gallery
+* Better error handling
+
+### Phase 4 — Community Growth
+
+* Daily prediction campaigns
+* Community fan battles
+* Streak events
+* Supporter badge campaigns
+* Stacks community demos
+* Builder updates
+
+### Phase 5 — Automation / Keeper
+
+* Scheduled match creation
+* Match closing
+* Result finalization helpers
+* Admin dashboard
+* Safer keeper role design
+
+---
+
+## Current Status
+
+```txt
+Contracts: Compiling with Clarinet
+Frontend: Building successfully with Next.js
+Wallet: Stacks Connect integrated
+Network: Mainnet-ready
+Deployment: In progress
+```
+
+---
+
+## Commands
+
+### Contract Check
+
+```bash
+clarinet check
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Run Dev Server
+
+```bash
+npm run dev
+```
+
+### Production Build
+
+```bash
+npm run build
+```
+
+### Git Push
+
+```bash
+git add .
+git commit -m "update FanCup Stacks 2026"
+git push
+```
+
+---
+
+## Links
+
+Website:
+
+```txt
+Coming soon
+```
+
+GitHub:
+
+```txt
+https://github.com/amandaaaaaaew23/fancup-stacks-2026
+```
+
+Mainnet Contracts:
+
+```txt
+Coming soon
+```
+
+Talent Protocol Project:
+
+```txt
+Coming soon
+```
+
+---
+
+## License
+
+MIT
+
+---
+
+## Disclaimer
+
+FanCup Stacks 2026 is an experimental onchain fan prediction and reputation application built on Stacks.
+
+It is not a betting platform, gambling platform, financial product, or investment product.
+
+The project is for educational, community, and ecosystem-building purposes.
+
