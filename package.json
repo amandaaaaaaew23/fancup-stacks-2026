@@ -11,7 +11,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:mainnet": "node scripts/deploy-mainnet-privatekey.mjs"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +22,7 @@
     "@stacks/network": "^7.3.1",
     "@stacks/transactions": "^6.17.0",
     "chokidar-cli": "^3.0.0",
+    "dotenv": "^17.4.2",
     "next": "^16.2.7",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
