@@ -14,6 +14,15 @@
     "lint": "next lint",
     "deploy:mainnet": "node scripts/deploy-mainnet-privatekey.mjs"
   },
+    "keywords": [
+    "stacks",
+    "clarity",
+    "stacks-blockchain",
+    "stacksone",
+    "web3",
+    "smart-contract",
+    "sdk"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
