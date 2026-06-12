@@ -1,4 +1,10 @@
 # FanCup Stacks 2026
+![Stacks](https://img.shields.io/badge/Network-Stacks-5546FF?style=for-the-badge&logo=stacks)
+![Clarity](https://img.shields.io/badge/Smart%20Contracts-Clarity-black?style=for-the-badge)
+![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react)
+![Vite](https://img.shields.io/badge/Build-Vite-646CFF?style=for-the-badge&logo=vite)
+![TailwindCSS](https://img.shields.io/badge/UI-TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
 **FanCup Stacks 2026** is an onchain football prediction and fan voting arena built on **Stacks**, using **Clarity smart contracts**, **Clarinet**, **Stacks Connect**, and **Stacks.js**.
 
