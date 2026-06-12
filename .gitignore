@@ -53,3 +53,4 @@ deployments/
 settings/Mainnet.toml
 settings/Testnet.toml
 deployments/
+human-activity.sh
