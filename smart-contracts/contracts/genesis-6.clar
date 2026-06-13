@@ -10,3 +10,6 @@
 
 (define-read-only (get-random-9)
   (ok u9))
+
+(define-public (ping-12)
+  (ok true))
