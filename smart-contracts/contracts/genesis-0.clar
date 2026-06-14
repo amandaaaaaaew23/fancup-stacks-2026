@@ -4,3 +4,6 @@
 
 (define-public (ping-10)
   (ok true))
+
+(define-read-only (get-random-14)
+  (ok u14))
