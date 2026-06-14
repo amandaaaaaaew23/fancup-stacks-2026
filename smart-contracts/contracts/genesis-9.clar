@@ -16,3 +16,6 @@
 
 (define-public (ping-64)
   (ok true))
+
+(define-public (ping-13)
+  (ok true))
