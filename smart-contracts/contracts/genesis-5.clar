@@ -43,3 +43,6 @@
 
 (define-public (ping-8)
   (ok true))
+
+(define-read-only (get-random-20)
+  (ok u20))
