@@ -22,3 +22,6 @@
 
 (define-public (ping-9)
   (ok true))
+
+(define-read-only (get-random-36)
+  (ok u36))
