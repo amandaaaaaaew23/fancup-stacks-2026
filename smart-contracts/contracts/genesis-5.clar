@@ -49,3 +49,6 @@
 
 (define-public (ping-6)
   (ok true))
+
+(define-read-only (get-random-12)
+  (ok u12))
