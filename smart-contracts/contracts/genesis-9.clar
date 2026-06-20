@@ -58,3 +58,6 @@
 
 (define-public (ping-7)
   (ok true))
+
+(define-read-only (get-random-9)
+  (ok u9))
