@@ -1,48 +1,91 @@
 {
-  "name": "contracts-temp-tests",
-  "version": "1.0.0",
-  "description": "Run unit tests on this project.",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "test": "vitest run",
-    "test:report": "vitest run -- --coverage --costs",
-    "test:watch": "chokidar \"tests/**/*.ts\" \"contracts/**/*.clar\" -c \"npm run test:report\"",
-    "dev": "next dev",
-    "build": "next build --webpack",
-    "start": "next start",
-    "lint": "next lint",
-    "deploy:mainnet": "node scripts/deploy-mainnet-privatekey.mjs"
-  },
-    "keywords": [
-    "stacks",
-    "clarity",
-    "stacks-blockchain",
-    "stacksone",
-    "web3",
-    "smart-contract",
-    "sdk"
-  ],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@hirosystems/clarinet-sdk": "^2.3.2",
-    "@stacks/connect": "^8.2.6",
-    "@stacks/network": "^7.3.1",
-    "@stacks/transactions": "^6.17.0",
-    "chokidar-cli": "^3.0.0",
-    "dotenv": "^17.4.2",
-    "next": "^16.2.7",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "typescript": "^5.3.3",
-    "vite": "^5.1.4",
-    "vitest": "^1.3.1",
-    "vitest-environment-clarinet": "^2.0.0"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.0",
-    "postcss": "^8.5.15",
-    "tailwindcss": "^4.3.0"
-  }
+"name": "fancup-stacks-2026",
+"version": "1.0.0",
+"description": "FanCup Stacks 2026 is an onchain football prediction, fan voting, and supporter reputation dApp built on the Stacks blockchain using Clarity smart contracts.",
+"private": true,
+"type": "module",
+"license": "MIT",
+"author": {
+"name": "amandaaaaaaew23",
+"url": "https://github.com/amandaaaaaaew23"
+},
+"repository": {
+"type": "git",
+"url": "git+https://github.com/amandaaaaaaew23/fancup-stacks-2026.git"
+},
+"bugs": {
+"url": "https://github.com/amandaaaaaaew23/fancup-stacks-2026/issues"
+},
+"homepage": "https://stacksone.vercel.app",
+"keywords": [
+"stacks",
+"stx",
+"clarity",
+"clarinet",
+"stacks-blockchain",
+"stacks-connect",
+"stacks-js",
+"stacks-mainnet",
+"bitcoin-l2",
+"bitcoin-layer-2",
+"smart-contract",
+"smart-contracts",
+"web3",
+"dapp",
+"onchain",
+"onchain-app",
+"onchain-game",
+"consumer-crypto",
+"football",
+"football-prediction",
+"prediction-game",
+"fan-voting",
+"fan-engagement",
+"supporter-reputation",
+"talent-protocol",
+"stacks-builder-rewards"
+],
+"stacks": {
+"network": "mainnet",
+"smartContractLanguage": "Clarity",
+"clarityVersion": 3,
+"contracts": [
+"fancup-core",
+"fancup-badge"
+]
+},
+"scripts": {
+"dev": "next dev",
+"build": "next build --webpack",
+"start": "next start",
+"typecheck": "tsc --noEmit",
+"test": "vitest run",
+"test:watch": "vitest",
+"test:report": "vitest run --reporter=verbose",
+"contracts:check": "clarinet check",
+"contracts:watch": "chokidar 'tests/**/*.ts' 'contracts/**/*.clar' -c 'npm run test'",
+"check": "npm run typecheck && npm run test && npm run contracts:check && npm run build",
+"deploy:mainnet": "node scripts/deploy-mainnet-privatekey.mjs"
+},
+"dependencies": {
+"@stacks/connect": "^8.2.6",
+"@stacks/network": "^7.3.1",
+"@stacks/transactions": "^6.17.0",
+"next": "^16.2.7",
+"react": "^19.2.7",
+"react-dom": "^19.2.7"
+},
+"devDependencies": {
+"@hirosystems/clarinet-sdk": "^2.3.2",
+"@tailwindcss/postcss": "^4.3.0",
+"chokidar-cli": "^3.0.0",
+"dotenv": "^17.4.2",
+"postcss": "^8.5.15",
+"tailwindcss": "^4.3.0",
+"typescript": "^5.3.3",
+"vite": "^5.1.4",
+"vitest": "^1.3.1",
+"vitest-environment-clarinet": "^2.0.0"
 }
+}
+
