@@ -71,3 +71,4 @@ Update devlog 104 at Min 21 Jun 2026 14:35:46 WIB
 Update devlog 105 at Min 21 Jun 2026 14:50:30 WIB
 Update devlog 9 at Min 21 Jun 2026 15:02:38 WIB
 Update devlog 108 at Min 21 Jun 2026 15:35:04 WIB
+Update devlog 114 at Min 21 Jun 2026 16:57:48 WIB
