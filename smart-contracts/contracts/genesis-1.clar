@@ -22,3 +22,6 @@
 
 (define-public (ping-155)
   (ok true))
+
+(define-public (ping-162)
+  (ok true))
