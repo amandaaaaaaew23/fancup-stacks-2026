@@ -37,3 +37,6 @@
 
 (define-public (ping-244)
   (ok true))
+
+(define-read-only (get-random-2)
+  (ok u2))
