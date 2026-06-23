@@ -70,3 +70,6 @@
 
 (define-read-only (get-random-276)
   (ok u276))
+
+(define-public (ping-294)
+  (ok true))
